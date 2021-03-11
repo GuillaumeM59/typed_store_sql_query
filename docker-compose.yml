@@ -1,0 +1,21 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: rails
+      POSTGRES_PASSWORD: devpassword
+
+  web:
+    build: .
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails s -p 3006 -b '0.0.0.0'"
+    environment:
+      - MASTER_KEY=f580c5ad96553473ffd9b8daca119a60
+    volumes:
+      - .:/app
+    ports:
+      - "3006:3006"
+    depends_on:
+      - db
